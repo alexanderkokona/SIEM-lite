@@ -1,0 +1,19 @@
+log_sources:
+  auth_log:
+    enabled: true
+    platform: linux
+    description: "System authentication and authorization events"
+
+    path: data/raw/auth.log
+
+    permissions:
+      required: read
+      typical_group: systemd-journal
+
+    format:
+      type: plaintext
+      encoding: utf-8
+      line_delimited: true
+
+    ingestion:
+      read_mode: batch

@@ -1,0 +1,66 @@
+
+---
+
+## `.gitignore` (fleshed out, SOC-safe)
+
+```gitignore
+# =====================
+# Python
+# =====================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+ENV/
+
+# =====================
+# Logs & Data
+# =====================
+*.log
+logs/*
+!logs/.gitkeep
+
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+data/samples/*.real
+
+# =====================
+# Secrets & Config
+# =====================
+.env
+.env.*
+*.key
+*.pem
+*.crt
+secrets/
+credentials/
+
+# =====================
+# OS / Editor Noise
+# =====================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# =====================
+# Test Artifacts
+# =====================
+.coverage
+htmlcov/
+pytest_cache/
+
+# =====================
+# Temporary Files
+# =====================
+*.tmp
+*.bak

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "event_id": "example-event-id",
+    "event_time": "2026-01-10T09:14:22",
+    "ingest_time": "2026-01-10T09:20:01",
+    "source_type": "auth_log",
+    "parser_version": "authlog-v1"
+  },
+  "source": {
+    "host": "localhost",
+    "program": "sshd",
+    "pid": 1234
+  },
+  "actor": {
+    "user": "admin",
+    "uid": null
+  },
+  "target": {
+    "user": null,
+    "resource": "ssh"
+  },
+  "action": {
+    "category": "authentication",
+    "type": "login"
+  },
+  "outcome": {
+    "result": "failure",
+    "reason": "invalid_user"
+  },
+  "network": {
+    "src_ip": "127.0.0.1",
+    "src_port": 51234,
+    "protocol": "ssh"
+  },
+  "privilege": {
+    "escalated": null,
+    "target_user": null
+  },
+  "raw": {
+    "message": "Failed password for invalid user admin from 127.0.0.1 port 51234 ssh2"
+  }
+}
