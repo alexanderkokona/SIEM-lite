@@ -1,0 +1,38 @@
+[Unit]
+Description=SIEM-lite Authentication Log Pipeline
+Documentation=file:///opt/siem-lite/README.md
+After=network.target syslog.target
+
+[Service]
+Type=simple
+User=siem-lite
+Group=siem-lite
+WorkingDirectory=/opt/siem-lite
+
+# Service execution
+ExecStart=/usr/bin/python3 -m siem_lite.daemon
+
+# Resource limitations
+MemoryLimit=256M
+CPUQuota=50%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=siem-lite
+
+# Restart policy
+Restart=on-failure
+RestartSec=10s
+StartLimitInterval=60s
+StartLimitBurst=5
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/auth.log /opt/siem-lite/data
+
+[Install]
+WantedBy=multi-user.target

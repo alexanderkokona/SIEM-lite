@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  siem-lite:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: siem-lite
+    restart: unless-stopped
+    
+    # Log file access (read-only)
+    volumes:
+      - /var/log/auth.log:/var/log/auth.log:ro
+      - siem-lite-data:/app/data
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    
+    # Environment
+    environment:
+      PYTHONUNBUFFERED: "1"
+      LOG_LEVEL: "INFO"
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  siem-lite-data:
+    driver: local

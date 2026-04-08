@@ -8,7 +8,7 @@ This file defines structure and validation rules only.
 No parsing, no detection logic.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 import uuid
 
@@ -26,7 +26,7 @@ def base_event() -> Dict[str, Any]:
         "metadata": {
             "event_id": generate_event_id(),
             "event_time": None,      # datetime
-            "ingest_time": datetime.utcnow(),
+            "ingest_time": datetime.now(timezone.utc),
             "source_type": None,     # e.g. "auth_log"
             "parser_version": None   # e.g. "authlog-v1"
         },

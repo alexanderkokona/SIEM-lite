@@ -14,17 +14,32 @@ It only verifies that the data source is real, readable, and usable.
 import os
 import sys
 import yaml
+import logging
+import argparse
+from pathlib import Path
 
 CONFIG_PATH = "config/log_sources.yaml"
 
+# Configure logging
+logger = logging.getLogger(__name__)
+
+
+def setup_logging(verbose: bool = False):
+    """Configure logging based on verbosity"""
+    level = logging.DEBUG if verbose else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="[%(levelname)s] %(message)s"
+    )
+
 
 def fatal(message: str):
-    print(f"[FATAL] {message}")
+    logger.error(message)
     sys.exit(1)
 
 
 def info(message: str):
-    print(f"[INFO] {message}")
+    logger.info(message)
 
 
 def load_config(path: str) -> dict:
@@ -77,10 +92,10 @@ def preview_log(path: str, lines: int = 5):
 def main():
     info("Starting auth.log access verification")
 
-config = load_config(CONFIG_PATH)
+    config = load_config(CONFIG_PATH)
 
-if config is None:
-    fatal("YAML config loaded as None (file may be empty or invalid)")
+    if config is None:
+        fatal("YAML config loaded as None (file may be empty or invalid)")
 
     sources = config.get("log_sources", {})
     auth_source = sources.get("auth_log")
@@ -97,6 +112,47 @@ if config is None:
     # Only preview if data exists
     if size > 0:
         preview_log(log_path)
+    
+    info("All checks passed!")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Verify authentication log access and configuration"
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose output (debug logging)"
+    )
+    parser.add_argument(
+        "-c", "--config",
+        default=CONFIG_PATH,
+        help="Path to log sources configuration file"
+    )
+    parser.add_argument(
+        "-l", "--lines",
+        type=int,
+        default=5,
+        help="Number of log lines to preview"
+    )
+    
+    args = parser.parse_args()
+    
+    # Update config path if provided
+    CONFIG_PATH = args.config
+    
+    # Setup logging
+    setup_logging(args.verbose)
+    
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger.info("Interrupted by user")
+        sys.exit(130)
+    except Exception as e:
+        logger.exception("Unexpected error")
+        sys.exit(1)
 
     info("Auth log verification completed successfully")
     info("You may proceed to parsing in the next sprint")
